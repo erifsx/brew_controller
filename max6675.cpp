@@ -1,14 +1,16 @@
 // this library is public domain. enjoy!
-// www.ladyada.net/learn/sensors/thermocouple
+// https://learn.adafruit.com/thermocouple/using-a-thermocouple
 
 #ifdef __AVR
   #include <avr/pgmspace.h>
 #elif defined(ESP8266)
   #include <pgmspace.h>
 #endif
-#include <util/delay.h>
+
 #include <stdlib.h>
 #include "max6675.h"
+
+#define _delay_ms(ms) delayMicroseconds((ms) * 1000)
 
 MAX6675::MAX6675(int8_t SCLK, int8_t CS, int8_t MISO) {
   sclk = SCLK;
