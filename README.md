@@ -5,6 +5,8 @@ Arduino library for interfacing with MAX6675 thermocouple amplifier. Originally 
 
 ## Initialization
 
+
+### Wiring
 There are different namings for each of the connections out there. Therefore copied from [Wikipedia](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus):
 
 |Name in the library|Long Name|Other names|
@@ -16,19 +18,25 @@ There are different namings for each of the connections out there. Therefore cop
 Ensure to wire this correctly.
 
 ### Regular setup
+**Important** due to a specific behaviour in platformio, the SPI library needs to be included in the main file:
+```cpp
+#include <SPI.h>
+```
+See [here](https://github.com/platformio/platformio/issues/702) for the explanation.
+
 Setup the Sensor like this:
 ```cpp
 MAX6675 thermocouple;
 ```
 During the setup method, you need to choose whether you initialize the Hardware SPI outside the MAX sensor or if the library should take care of it all.
 
-#### Library takes care:
+#### Library takes care
 Set the pins for SCLK, CS, MISO as arguments. You can additional set the optional offset for the temperature in degrees Celsius. If you want to use Fahrenheit offsets, you need to set that using setOffsetFahrenheit();
 ```cpp
 thermocouple.begin(SCLK, CS, MISO[, OFFSET]);
 ```
 
-#### Hardware SPI:
+#### Hardware SPI
 [@eadf](https://github.com/eadf) added a hardware SPI mode. In this mode the SPI pins can be reused for your MAX6675 device as well as any other SPI gadget you got connected. Assumes you already have setup SPI with ```SPI.begin()```. You can additional set the optional offset for the temperature in degrees Celsius. If you want to use Fahrenheit offsets, you need to set that using setOffsetFahrenheit();
 ```cpp
 thermocouple.begin(CS[, OFFSET]);
