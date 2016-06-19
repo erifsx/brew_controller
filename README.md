@@ -75,3 +75,7 @@ void setOffsetFahrenheit();
 
 # Continuous Integration
 [![Build Status](https://travis-ci.org/SirUli/MAX6675.svg?branch=master)](https://travis-ci.org/SirUli/MAX6675)
+
+# Release History
+* 1.0 Original Release by Adafruit
+* 2.0 Move to SirUli's repository with fixes and change of constructor
