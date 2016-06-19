@@ -1,5 +1,9 @@
+// This libary is originally developed in this repo:
+// https://github.com/adafruit/MAX6675-library
+//
+// Original Header:
 // this library is public domain. enjoy!
-// www.ladyada.net/learn/sensors/thermocouple
+// https://learn.adafruit.com/thermocouple/using-a-thermocouple
 
 #ifdef __AVR
   #include <avr/pgmspace.h>
@@ -11,7 +15,20 @@
 #include "max6675.h"
 #include <SPI.h>
 
-MAX6675::MAX6675(int8_t SCLK, int8_t CS, int8_t MISO) : hwSPI(false) {
+MAX6675::MAX6675(int8_t SCLK, int8_t CS, int8_t MISO, double OFFSET) {
+  begin(SCLK, CS, MISO, OFFSET);
+}
+
+MAX6675::MAX6675(int8_t CS, double OFFSET) {
+  begin(CS, OFFSET);
+}
+
+MAX6675::MAX6675(){
+}
+
+void MAX6675::begin(int8_t SCLK, int8_t CS, int8_t MISO, double OFFSET) {
+  hwSPI = false;
+  offset = OFFSET;
   sclk = SCLK;
   cs = CS;
   miso = MISO;
@@ -24,7 +41,9 @@ MAX6675::MAX6675(int8_t SCLK, int8_t CS, int8_t MISO) : hwSPI(false) {
   digitalWrite(cs, HIGH);
 }
 
-MAX6675::MAX6675(int8_t CS) : hwSPI(true) {
+void MAX6675::begin(int8_t CS, double OFFSET) {
+  hwSPI = true;
+  offset = OFFSET;
   cs = CS;
   //define pin modes
   pinMode(cs, OUTPUT);
@@ -72,6 +91,14 @@ double MAX6675::readCelsius(void) {
 
 double MAX6675::readFahrenheit(void) {
   return readCelsius() * 9.0/5.0 + 32;
+}
+
+void MAX6675::setOffsetCelsius(double OFFSET) {
+  offset = OFFSET;
+}
+
+void MAX6675::setOffsetFahrenheit(double OFFSET) {
+  offset = (OFFSET - 32) * (5.0/9.0);
 }
 
 byte MAX6675::spiread(void) {

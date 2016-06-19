@@ -1,5 +1,5 @@
 // this example is public domain. enjoy!
-// www.ladyada.net/learn/sensors/thermocouple
+// https://learn.adafruit.com/thermocouple/using-a-thermocouple
 
 #include <max6675.h>
 #include <LiquidCrystal.h>
@@ -9,7 +9,7 @@ int thermoDO = 4;
 int thermoCS = 5;
 int thermoCLK = 6;
 
-MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
+MAX6675 thermocouple;
 int vccPin = 3;
 int gndPin = 2;
 
@@ -20,10 +20,12 @@ uint8_t degree[8]  = {140,146,146,140,128,128,128,128};
 
 void setup() {
   Serial.begin(9600);
-  // use Arduino pins 
+
+  thermocouple.begin(thermoCLK, thermoCS, thermoDO);
+  // use Arduino pins
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
-  
+
   lcd.begin(16, 2);
   lcd.createChar(0, degree);
 
@@ -36,7 +38,7 @@ void loop() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("MAX6675 test");
-  
+
   // go to line #1
   lcd.setCursor(0,1);
   lcd.print(thermocouple.readCelsius());
@@ -53,6 +55,6 @@ void loop() {
   lcd.print(0, BYTE);
 #endif
   lcd.print('F');
-  
+
   delay(1000);
 }
