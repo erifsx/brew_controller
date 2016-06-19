@@ -2,6 +2,7 @@
 // https://learn.adafruit.com/thermocouple/using-a-thermocouple
 
 #include "max6675.h"
+#include <SPI.h>
 
 int thermoDO = 4;
 int thermoCS = 5;

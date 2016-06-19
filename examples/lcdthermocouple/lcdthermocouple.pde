@@ -4,6 +4,7 @@
 #include <max6675.h>
 #include <LiquidCrystal.h>
 #include <Wire.h>
+#include <SPI.h>
 
 int thermoDO = 4;
 int thermoCS = 5;
