@@ -14,6 +14,11 @@ env:
 
 install:
     - pip install -U platformio
+    #
+    # Libraries from PlatformIO Library Registry:
+    #
+    # http://platformio.org/lib/show/136/LiquidCrystal
+    - platformio lib install 136
 
 script:
     - platformio ci --board=esp12e --lib="."
