@@ -63,3 +63,4 @@ Configures an offset in degrees Celsius for the sensor
 Configures an offset in degrees Fahrenheit for the sensor
 
 # Continuous Integration
+[![Build Status](https://travis-ci.org/SirUli/MAX6675.svg?branch=master)](https://travis-ci.org/SirUli/MAX6675)
