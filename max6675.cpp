@@ -57,7 +57,7 @@ double MAX6675::readCelsius(void) {
   digitalWrite(cs, LOW);
 
   // CSB Fall to Output Enable
-  delayMicroseconds(1);
+  delayMicroseconds(1000);
 
   if (hwSPI) {
 #ifdef MAX6675_LIBRARY_HW_SLOWDOWN
@@ -76,7 +76,7 @@ double MAX6675::readCelsius(void) {
 
   digitalWrite(cs, HIGH);
   // CSB Rise to Output Disable
-  delayMicroseconds(1);
+  delayMicroseconds(1000);
 
   if (v & 0x4) {
     // uh oh, no thermocouple attached!
@@ -108,14 +108,14 @@ byte MAX6675::spiread(void) {
   for (i=7; i>=0; i--)
   {
     digitalWrite(sclk, LOW);
-    delayMicroseconds(1);
+    delayMicroseconds(1000);
     if (digitalRead(miso)) {
       //set the bit to 0 no matter what
       d |= (1 << i);
     }
 
     digitalWrite(sclk, HIGH);
-    delayMicroseconds(1);
+    delayMicroseconds(1000);
   }
 
   return d;
