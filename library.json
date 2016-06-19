@@ -8,4 +8,5 @@
   },
   "frameworks": "arduino",
   "platforms": "atmelavr",
+  "version": "2.1.0"
 }
