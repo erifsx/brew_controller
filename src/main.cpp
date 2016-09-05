@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266SSDP.h>
 #include <WiFiManager.h>
 #include <SPI.h>
 #include <max6675.h>
@@ -29,10 +30,11 @@ double mash_temp = -999.0;
 double elem_temp = -999.0;
 
 void update_temperature();
+void get_temp();
 
 
 WiFiManager wifiManager;
-WiFiServer server(80);
+ESP8266WebServer http(80);
 
 void setup(){
   Serial.begin(115200);
@@ -49,40 +51,48 @@ void setup(){
   delay(500); // waiting for MAX6675 chips to stabalize
   temp_update.attach(0.5, update_temperature);
 
+  http.on("/", HTTP_GET, get_temp);
+  http.on("/index.html", HTTP_GET, get_temp);
+  http.on("/description.xml", HTTP_GET, [](){
+    SSDP.schema(http.client());
+  });
+
   wifiManager.autoConnect("BrewControllerConfig");
   Serial.println();
   Serial.println("WiFi connected");
-  server.begin();
+  http.begin();
+  SSDP.setSchemaURL("description.xml");
+
+  SSDP.setHTTPPort(80);
+  SSDP.setName("Brew Controller");
+  SSDP.setSerialNumber("633878639586");
+  SSDP.setURL("index.html");
+  SSDP.setModelName("Brew Controller V0.1");
+  SSDP.setModelNumber("849862634386");
+  SSDP.setModelURL("https://github.com/erifsx/brew_controller");
+  SSDP.setManufacturer("Eric Marcoux");
+  SSDP.setManufacturerURL("https://github.com/erifsx/brew_controller");
+  SSDP.begin();
   Serial.print("Server started at ");
   Serial.print(WiFi.localIP());
   Serial.println(":80");
 }
 
+void get_temp() {
+  String resp = "{\"temperature\":{\"mash\":";
+         resp += mash_temp;
+         resp += ", \"element\":";
+         resp += elem_temp;
+         resp += "}}";
+  http.send(200, "application/json", resp);
+}
+
 void update_temperature() {
   mash_temp = mash_thermocouple.readFahrenheit();
   elem_temp = element_thermocouple.readFahrenheit();
-
-  Serial.print("mash temp = ");
-  Serial.println(mash_temp);
-  Serial.print("element temp = ");
-  Serial.println(elem_temp);
 }
 
 void loop() {
-  WiFiClient client = server.available();
+  http.handleClient();
   delay(1);
-
-  // wifi section
-  if(client && client.available()) {
-    String s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n";
-           s += "<html>\r\n";
-           s += "Mash temp: ";
-           s += mash_temp;
-           s += "<br/>Element temp: ";
-           s += elem_temp;
-           s += "</html>\n";
-    client.print(s);
-    client.stop();
-  }
-  delay(10);
 }
