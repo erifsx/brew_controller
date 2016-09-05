@@ -1,12 +1,12 @@
 #include <Arduino.h>
 
-int state = HIGH;
 
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, state = !state);
   delay(1000);
+  Serial.printf("It works\n");
 }
